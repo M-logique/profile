@@ -1,0 +1,29 @@
+name: Clean History
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository Contents
+        uses: actions/checkout@v4
+
+      - name: Clean Up Files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan latest_branch
+          git add -A
+          git commit -am "."
+          git branch -D main
+          git branch -m main
+          git push -f origin main
